@@ -33,7 +33,9 @@ matrix:
   - if: branch !~ /(^branch-.*-built)/
     name: "JavaScript & CSS lint"
     language: node_js
-    env: WP_TRAVISCI="yarn lint"
+    # Temporarily lint only JS files in CI
+    # See https://github.com/Automattic/jetpack/pull/11767
+    env: WP_TRAVISCI="yarn lint:js"
   - if: branch !~ /(^branch-.*-built)/
     name: "Danger CI, test dashboard & extensions"
     language: node_js

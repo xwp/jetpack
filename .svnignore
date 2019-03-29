@@ -3,6 +3,8 @@
 .git
 .gitignore
 .sass-cache
+.stylelintignore
+.stylelintrc.json
 .travis.yml
 .npmrc
 .nvmrc
