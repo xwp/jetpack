@@ -75,9 +75,6 @@ matrix:
     name: "E2E tests"
     if: branch !~ /(^branch-.*-built)/ AND env(RUN_E2E) = true
     install:
-    - ./tests/e2e/bin/setup-travis-e2e-tests.sh
-    - echo $(curl -s localhost:4040/api/tunnels/command_line | jq --raw-output .public_url)
-    before_script:
     # Enable user namespace cloning
     # - "sysctl kernel.unprivileged_userns_clone=1"
     - nvm install
