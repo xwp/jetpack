@@ -242,10 +242,36 @@ if ( ! class_exists( 'Jetpack_Contact_Info_Widget' ) ) {
 			<p>
 				<label for="<?php echo esc_attr( $this->get_field_id( 'address' ) ); ?>"><?php esc_html_e( 'Address:', 'jetpack' ); ?></label>
 				<textarea class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'address' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'address' ) ); ?>"><?php echo esc_textarea( $instance['address'] ); ?></textarea>
+			</p>
 
+			<p>
 				<input class="jp-contact-info-showmap" id="<?php echo esc_attr( $this->get_field_id( 'showmap' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'showmap' ) ); ?>" value="1" type="checkbox" <?php checked( $instance['showmap'], 1 ); ?> />
 				<label for="<?php echo esc_attr( $this->get_field_id( 'showmap' ) ); ?>"><?php esc_html_e( 'Show map', 'jetpack' ); ?></label>
 			</p>
+
+			<?php if ( has_filter( 'jetpack_google_maps_api_key' ) ) { ?>
+
+			<p class="jp-contact-info-admin-map" style="<?php echo $instance['showmap'] ? '' : 'display: none;'; ?>">
+				<?php
+					printf(
+						wp_kses(
+							__('API key <code>%1$s</code> is being set by <a href="%2$s" target="_blank" rel="noopener noreferrer">this</a> filter.', 'jetpack'),
+							array(
+								'a' => array(
+									'href' => array(),
+									'target' => array(),
+									'rel' => array()
+								),
+								'code' => array()
+							)
+						),
+						esc_attr( $apikey ),
+						esc_url('https://developer.jetpack.com/hooks/jetpack_google_maps_api_key/')
+					);
+				?>
+			</p>
+
+			<?php } else { ?>
 
 			<p class="jp-contact-info-admin-map" style="<?php echo $instance['showmap'] ? '' : 'display: none;'; ?>">
 				<label for="<?php echo esc_attr( $this->get_field_id( 'apikey' ) ); ?>">
@@ -254,8 +280,11 @@ if ( ! class_exists( 'Jetpack_Contact_Info_Widget' ) ) {
 					<?php if ( has_filter( 'jetpack_google_maps_api_key' ) ) { echo 'disabled="disabled"'; } ?> />
 					<br />
 					<small><?php printf( wp_kses( __( 'Google now requires an API key to use their maps on your site. <a href="%s">See our documentation</a> for instructions on acquiring a key.', 'jetpack' ), array( 'a' => array( 'href' => true ) ) ), 'https://jetpack.com/support/extra-sidebar-widgets/contact-info-widget/' ); ?></small>
+					
 				</label>
 			</p>
+
+			<?php } ?>
 
 			<p class="jp-contact-info-admin-map jp-contact-info-embed-map" style="<?php echo $instance['showmap'] ? '' : 'display: none;'; ?>">
 				<?php
