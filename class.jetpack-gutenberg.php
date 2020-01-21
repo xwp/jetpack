@@ -32,6 +32,19 @@ function jetpack_register_block( $slug, $args = array() ) {
 		return false;
 	}
 
+	// If the block is dynamic, wrap the render_callback to check availability.
+	if ( isset( $args['render_callback'] ) ) {
+		$render_callback         = $args['render_callback'];
+		$args['render_callback'] = function ( $prepared_attributes, $block_content ) use ( $render_callback, $slug ) {
+			$availability = Jetpack_Gutenberg::get_availability();
+			$bare_slug    = Jetpack_Gutenberg::remove_extension_prefix( $slug );
+			if ( isset( $availability[ $bare_slug ] ) && $availability[ $bare_slug ] ) {
+				return call_user_func( $render_callback, $prepared_attributes, $block_content );
+			}
+			return null;
+		};
+	}
+
 	return register_block_type( $slug, $args );
 }
 
@@ -107,7 +120,7 @@ class Jetpack_Gutenberg {
 	 *
 	 * @return string The unprefixed extension name.
 	 */
-	private static function remove_extension_prefix( $extension_name ) {
+	public static function remove_extension_prefix( $extension_name ) {
 		if ( wp_startswith( $extension_name, 'jetpack/' ) || wp_startswith( $extension_name, 'jetpack-' ) ) {
 			return substr( $extension_name, strlen( 'jetpack/' ) );
 		}
@@ -389,8 +402,9 @@ class Jetpack_Gutenberg {
 		$available_extensions = array();
 
 		foreach ( self::$extensions as $extension ) {
-			$is_available = self::is_registered( 'jetpack/' . $extension ) ||
-			( isset( self::$availability[ $extension ] ) && true === self::$availability[ $extension ] );
+			$is_set       = isset( self::$availability[ $extension ] );
+			$is_available = ( $is_set && true === self::$availability[ $extension ] )
+				|| ( ! $is_set && self::is_registered( 'jetpack/' . $extension ) );
 
 			$available_extensions[ $extension ] = array(
 				'available' => $is_available,
@@ -800,5 +814,41 @@ class Jetpack_Gutenberg {
 		}
 
 		return $preset_extensions;
+	}
+
+
+	/**
+	 * Set the availability of a WPCOM premium block
+	 * based on the context we're running in
+	 *
+	 * @param string $slug Slug of the block.
+	 */
+	public static function set_availability_for_plan( $slug ) {
+		$is_available = true;
+		$plan         = '';
+
+		if ( defined( 'IS_WPCOM' ) && IS_WPCOM ) {
+			// TODO check against wpcom product.
+			$is_available = true;
+		} elseif ( ! jetpack_is_atomic_site() ) {
+			/*
+			 * If it's Atomic then assume all features are available
+			 * otherwise check against the Jetpack plan.
+			 */
+			$is_available = Jetpack_Plan::supports( $slug );
+			$plan         = Jetpack_Plan::get_minimum_plan_for_feature( $slug );
+		}
+		if ( $is_available ) {
+			self::set_extension_available( $slug );
+		} else {
+			self::set_extension_unavailable(
+				$slug,
+				'missing_plan',
+				array(
+					'required_feature' => self::remove_extension_prefix( $slug ),
+					'required_plan'    => $plan,
+				)
+			);
+		}
 	}
 }
