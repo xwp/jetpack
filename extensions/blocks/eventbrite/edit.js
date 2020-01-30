@@ -1,7 +1,6 @@
 /**
  * External dependencies
  */
-import classnames from 'classnames';
 import { __, _x } from '@wordpress/i18n';
 import { Component } from '@wordpress/element';
 import {
@@ -14,12 +13,10 @@ import {
 	Spinner,
 	ExternalLink,
 } from '@wordpress/components';
-import { BlockControls, BlockIcon, BlockPreview } from '@wordpress/block-editor';
+import { BlockControls, BlockIcon } from '@wordpress/block-editor';
 import { withDispatch } from '@wordpress/data';
 import { InspectorControls } from '@wordpress/editor';
 import apiFetch from '@wordpress/api-fetch';
-import { ENTER, SPACE } from '@wordpress/keycodes';
-import { createBlock } from '@wordpress/blocks';
 
 /**
  * Internal dependencies
@@ -31,6 +28,7 @@ import { icon, URL_REGEX } from '.';
 import { isAtomicSite, isSimpleSite } from '../../shared/site-type-utils';
 import ModalButtonPreview from './modal-button-preview';
 import EventbriteInPageExample from './eventbrite-in-page-example.png';
+import BlockStylesSelector from '../../shared/components/block-styles-selector';
 import './editor.scss';
 
 const MODAL_BUTTON_STYLES = [
@@ -144,12 +142,6 @@ class EventbriteEdit extends Component {
 		);
 	};
 
-	setEmbedType = embedType => {
-		const { setAttributes } = this.props;
-
-		setAttributes( { useModal: 'modal' === embedType } );
-	};
-
 	renderLoading() {
 		return (
 			<div className="wp-block-embed is-loading">
@@ -160,13 +152,16 @@ class EventbriteEdit extends Component {
 	}
 
 	renderInspectorControls() {
-		const { attributes, name } = this.props;
-		const { useModal, text } = attributes;
+		const { url, style } = this.props.attributes;
+		const { attributes, clientId, setAttributes } = this.props;
+
+		if ( ! url ) {
+			return;
+		}
 
 		const embedTypes = [
 			{
 				value: 'inline',
-				isActive: ! useModal,
 				label: __( 'In-page Embed', 'jetpack' ),
 				preview: (
 					<div className="block-editor-block-preview__container">
@@ -179,24 +174,7 @@ class EventbriteEdit extends Component {
 			},
 			{
 				value: 'modal',
-				isActive: useModal,
-				label: __( ' Button & Modal', 'jetpack' ),
-				// @todo Replace with `getBlockFromExample` when WP 5.3 becomes the Jetpack minimum version
-				preview: (
-					<BlockPreview
-						viewportWidth={ 500 }
-						blocks={ createBlock(
-							name,
-							{
-								attributes,
-								url: 'https://www.eventbrite.com/e/test-event-tickets-123456789',
-								useModal: true,
-								text: text || _x( 'Register', 'verb: e.g. register for an event.', 'jetpack' ),
-							},
-							[]
-						) }
-					/>
-				),
+				label: __( 'Button & Modal', 'jetpack' ),
 			},
 		];
 
@@ -210,37 +188,16 @@ class EventbriteEdit extends Component {
 						'jetpack'
 					) }
 				>
-					<div className="block-editor-block-styles">
-						{ embedTypes.map( this.renderEmbedTypeItem.bind( this ) ) }
-					</div>
+					<BlockStylesSelector
+						clientId={ clientId }
+						styleOptions={ embedTypes }
+						onSelectStyle={ setAttributes }
+						activeStyle={ style }
+						attributes={ attributes }
+						viewportWidth={ 130 }
+					/>
 				</PanelBody>
 			</InspectorControls>
-		);
-	}
-
-	// Render embed types selection with previews, similar to block styles.
-	// https://github.com/WordPress/gutenberg/blob/wp/5.3/packages/block-editor/src/components/block-styles/index.js#L100
-	renderEmbedTypeItem( { label, isActive, value, preview } ) {
-		return (
-			<div
-				key={ value }
-				className={ classnames( 'block-editor-block-styles__item', {
-					'is-active': isActive,
-				} ) }
-				onClick={ () => this.setEmbedType( value ) }
-				onKeyDown={ event => {
-					if ( ENTER === event.keyCode || SPACE === event.keyCode ) {
-						event.preventDefault();
-						() => this.setEmbedType( value );
-					}
-				} }
-				role="button"
-				tabIndex="0"
-				aria-label={ label }
-			>
-				<div className="block-editor-block-styles__item-preview">{ preview }</div>
-				<div className="block-editor-block-styles__item-label">{ label }</div>
-			</div>
 		);
 	}
 
@@ -288,7 +245,7 @@ class EventbriteEdit extends Component {
 							placeholder={ __( 'Enter an event URL to embed here…', 'jetpack' ) }
 							onChange={ event => this.setState( { editedUrl: event.target.value } ) }
 						/>
-						<Button isLarge isDefault isSecondary type="submit">
+						<Button isLarge isSecondary type="submit">
 							{ _x( 'Embed', 'submit button label', 'jetpack' ) }
 						</Button>
 						{ this.cannotEmbed() && (
@@ -360,7 +317,7 @@ class EventbriteEdit extends Component {
 	 */
 	render() {
 		const { attributes, addModalButtonStyles, removeModalButtonStyles } = this.props;
-		const { url, useModal } = attributes;
+		const { url, style } = attributes;
 		const { editingUrl, resolvingUrl } = this.state;
 
 		let component;
@@ -372,7 +329,7 @@ class EventbriteEdit extends Component {
 			removeModalButtonStyles();
 			component = this.renderEditEmbed();
 		} else {
-			if ( useModal ) {
+			if ( style === 'modal' ) {
 				addModalButtonStyles();
 			} else {
 				removeModalButtonStyles();
@@ -380,7 +337,11 @@ class EventbriteEdit extends Component {
 			component = (
 				<>
 					{ this.renderBlockControls() }
-					{ useModal ? <ModalButtonPreview { ...this.props } /> : this.renderInlinePreview() }
+					{ style === 'modal' ? (
+						<ModalButtonPreview { ...this.props } />
+					) : (
+						this.renderInlinePreview()
+					) }
 				</>
 			);
 		}
