@@ -25,6 +25,7 @@ import { __, _x } from '@wordpress/i18n';
  * Internal dependencies
  */
 import './editor.scss';
+import './view.scss';
 import icon from './icon';
 import attributeDetails from './attributes';
 import { getValidatedAttributes } from '../../shared/get-validated-attributes';
@@ -144,7 +145,6 @@ export default function CalendlyEdit( { attributes, className, clientId, setAttr
 				frameBorder="0"
 				data-origwidth="100%"
 				data-origheight="100%"
-				style={ { minWidth: '320px', height: '630px', width: '100%' } }
 				title="Calendly"
 			></iframe>
 		</>
