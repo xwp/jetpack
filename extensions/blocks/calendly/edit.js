@@ -250,8 +250,10 @@ export default function CalendlyEdit( { attributes, className, clientId, setAttr
 		</InspectorControls>
 	);
 
+	const classes = `${ className } calendly-style-${ style }`;
+
 	return (
-		<div className={ className }>
+		<div className={ classes }>
 			{ inspectorControls }
 			{ blockControls }
 			{ url ? blockPreview( style ) : blockPlaceholder }
