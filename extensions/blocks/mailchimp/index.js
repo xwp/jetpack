@@ -38,6 +38,13 @@ export const settings = {
 			type: 'string',
 			default: __( 'Join my email list', 'jetpack' ),
 		},
+		backgroundButtonColor: {
+			type: 'string',
+		},
+		textButtonColor: {
+			type: 'string',
+		},
+		submitButtonClasses: { type: 'string' },
 		customBackgroundButtonColor: {
 			type: 'string',
 		},

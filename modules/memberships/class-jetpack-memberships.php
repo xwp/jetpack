@@ -226,15 +226,22 @@ class Jetpack_Memberships {
 			'powered_text' => __( 'Powered by WordPress.com', 'jetpack' ),
 		);
 
+		$additional_classes = ! empty( $attrs['submitButtonClasses'] )
+			? explode( ' ', $attrs['submitButtonClasses'] )
+			: array();
+
 		$classes = Jetpack_Gutenberg::block_classes(
 			self::$button_block_name,
 			$attrs,
-			array(
-				'wp-block-button__link',
-				'components-button',
-				'is-primary',
-				'is-button',
-				self::$css_classname_prefix . '-' . $data['id'],
+			array_merge(
+				array(
+					'wp-block-button__link',
+					'components-button',
+					'is-primary',
+					'is-button',
+					self::$css_classname_prefix . '-' . $data['id'],
+				),
+				$additional_classes
 			)
 		);
 

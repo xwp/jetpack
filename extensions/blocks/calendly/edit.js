@@ -32,7 +32,8 @@ import SubmitButton from '../../shared/submit-button';
 import { getAttributesFromEmbedCode } from './utils';
 import BlockStylesSelector from '../../shared/components/block-styles-selector';
 
-export default function CalendlyEdit( { attributes, className, clientId, setAttributes } ) {
+export default function CalendlyEdit( props ) {
+	const { attributes, className, clientId, setAttributes } = props;
 	const validatedAttributes = getValidatedAttributes( attributeDetails, attributes );
 
 	if ( ! isEqual( validatedAttributes, attributes ) ) {
@@ -150,13 +151,7 @@ export default function CalendlyEdit( { attributes, className, clientId, setAttr
 		</>
 	);
 
-	const submitButtonPreview = (
-		<SubmitButton
-			submitButtonText={ submitButtonText }
-			attributes={ attributes }
-			setAttributes={ setAttributes }
-		/>
-	);
+	const submitButtonPreview = <SubmitButton { ...props } />;
 
 	const linkPreview = (
 		<>

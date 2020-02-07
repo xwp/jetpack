@@ -5,7 +5,7 @@ import classnames from 'classnames';
 import SubmitButton from '../../shared/submit-button';
 import apiFetch from '@wordpress/api-fetch';
 import { __, sprintf } from '@wordpress/i18n';
-import { trimEnd } from 'lodash';
+import { isEmpty, trimEnd } from 'lodash';
 import formatCurrency, { getCurrencyDefaults } from '@automattic/format-currency';
 import { addQueryArgs, getQueryArg, isURL } from '@wordpress/url';
 import { compose } from '@wordpress/compose';
@@ -377,21 +377,12 @@ class MembershipsButtonEdit extends Component {
 				</PanelBody>
 			</InspectorControls>
 		);
-		const blockClasses = classnames( className, [
-			'wp-block-button__link',
-			'components-button',
-			'is-primary',
-			'is-button',
-			`align${ align }`,
-		] );
-		const blockContent = (
-			<SubmitButton
-				className={ blockClasses }
-				submitButtonText={ this.props.attributes.submitButtonText }
-				attributes={ this.props.attributes }
-				setAttributes={ this.props.setAttributes }
-			/>
-		);
+		const additionalClasses = [ 'components-button', 'is-primary', 'is-button', `align${ align }` ];
+		const buttonClasses = ! isEmpty( this.props.attributes.submitButtonClasses )
+			? this.props.attributes.submitButtonClasses.split( ' ' ).concat( additionalClasses )
+			: [ 'wp-block-button__link', ...additionalClasses ];
+		const blockClasses = classnames( className, buttonClasses );
+		const blockContent = <SubmitButton { ...this.props } className={ blockClasses } />;
 		return (
 			<Fragment>
 				{ this.props.noticeUI }
