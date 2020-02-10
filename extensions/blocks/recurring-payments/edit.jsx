@@ -349,10 +349,20 @@ class MembershipsButtonEdit extends Component {
 		return addQueryArgs( connectURL, { state: btoa( JSON.stringify( decodedState ) ) } );
 	}
 
-	render = () => {
-		const { attributes, className, notices } = this.props;
-		const { connected, products } = this.state;
+	getBlockClassNames = () => {
+		const { attributes, className } = this.props;
 		const { align } = attributes;
+
+		const additionalClasses = [ 'components-button', 'is-primary', 'is-button', `align${ align }` ];
+		const buttonClasses = ! isEmpty( this.props.attributes.submitButtonClasses )
+			? this.props.attributes.submitButtonClasses.split( ' ' ).concat( additionalClasses )
+			: [ 'wp-block-button__link', ...additionalClasses ];
+		return classnames( className, buttonClasses );
+	};
+
+	render = () => {
+		const { notices } = this.props;
+		const { connected, products } = this.state;
 
 		const stripeConnectUrl = this.getConnectUrl();
 
@@ -377,12 +387,7 @@ class MembershipsButtonEdit extends Component {
 				</PanelBody>
 			</InspectorControls>
 		);
-		const additionalClasses = [ 'components-button', 'is-primary', 'is-button', `align${ align }` ];
-		const buttonClasses = ! isEmpty( this.props.attributes.submitButtonClasses )
-			? this.props.attributes.submitButtonClasses.split( ' ' ).concat( additionalClasses )
-			: [ 'wp-block-button__link', ...additionalClasses ];
-		const blockClasses = classnames( className, buttonClasses );
-		const blockContent = <SubmitButton { ...this.props } className={ blockClasses } />;
+
 		return (
 			<Fragment>
 				{ this.props.noticeUI }
@@ -465,8 +470,9 @@ class MembershipsButtonEdit extends Component {
 				{ this.state.products && inspectorControls }
 				{ ( ( ( this.hasUpgradeNudge || ! this.state.shouldUpgrade ) &&
 					connected !== API_STATE_LOADING ) ||
-					this.props.attributes.planId ) &&
-					blockContent }
+					this.props.attributes.planId ) && (
+					<SubmitButton { ...this.props } className={ this.getBlockClassNames() } />
+				) }
 				{ this.hasUpgradeNudge && connected === API_STATE_NOTCONNECTED && (
 					<div className="wp-block-jetpack-recurring-payments disclaimer-only">
 						{ this.renderDisclaimer() }
