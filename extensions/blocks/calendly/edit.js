@@ -183,7 +183,7 @@ export default function CalendlyEdit( { attributes, className, clientId, setAttr
 	];
 
 	const inspectorControls = (
-		<InspectorControls>
+		<>
 			{ url && (
 				<BlockStylesSelector
 					clientId={ clientId }
@@ -194,37 +194,39 @@ export default function CalendlyEdit( { attributes, className, clientId, setAttr
 					viewportWidth={ 500 }
 				/>
 			) }
-			<PanelBody title={ __( 'Calendar Settings', 'jetpack' ) } initialOpen={ false }>
-				<form onSubmit={ parseEmbedCode } className={ `${ className }-embed-form-sidebar` }>
-					<input
-						type="text"
-						id="embedCode"
-						onChange={ event => setEmbedCode( event.target.value ) }
-						placeholder={ __( 'Calendly web address or embed code…', 'jetpack' ) }
-						value={ embedCode }
-						className="components-placeholder__input"
-					/>
-					<div>
-						<Button isSecondary isLarge type="submit">
-							{ _x( 'Embed', 'button label', 'jetpack' ) }
-						</Button>
-					</div>
-				</form>
+			<InspectorControls>
+				<PanelBody title={ __( 'Calendar Settings', 'jetpack' ) } initialOpen={ false }>
+					<form onSubmit={ parseEmbedCode } className={ `${ className }-embed-form-sidebar` }>
+						<input
+							type="text"
+							id="embedCode"
+							onChange={ event => setEmbedCode( event.target.value ) }
+							placeholder={ __( 'Calendly web address or embed code…', 'jetpack' ) }
+							value={ embedCode }
+							className="components-placeholder__input"
+						/>
+						<div>
+							<Button isSecondary isLarge type="submit">
+								{ _x( 'Embed', 'button label', 'jetpack' ) }
+							</Button>
+						</div>
+					</form>
 
-				<ToggleControl
-					label={ __( 'Hide Event Type Details', 'jetpack' ) }
-					checked={ hideEventTypeDetails }
-					onChange={ () => setAttributes( { hideEventTypeDetails: ! hideEventTypeDetails } ) }
-				/>
-			</PanelBody>
-			{ url && (
-				<Notice className={ `${ className }-color-notice` } isDismissible={ false }>
-					<ExternalLink href="https://help.calendly.com/hc/en-us/community/posts/360033166114-Embed-Widget-Color-Customization-Available-Now-">
-						{ __( 'Follow these instructions to change the colors in this block.', 'jetpack' ) }
-					</ExternalLink>
-				</Notice>
-			) }
-		</InspectorControls>
+					<ToggleControl
+						label={ __( 'Hide Event Type Details', 'jetpack' ) }
+						checked={ hideEventTypeDetails }
+						onChange={ () => setAttributes( { hideEventTypeDetails: ! hideEventTypeDetails } ) }
+					/>
+				</PanelBody>
+				{ url && (
+					<Notice className={ `${ className }-color-notice` } isDismissible={ false }>
+						<ExternalLink href="https://help.calendly.com/hc/en-us/community/posts/360033166114-Embed-Widget-Color-Customization-Available-Now-">
+							{ __( 'Follow these instructions to change the colors in this block.', 'jetpack' ) }
+						</ExternalLink>
+					</Notice>
+				) }
+			</InspectorControls>
+		</>
 	);
 
 	return (
