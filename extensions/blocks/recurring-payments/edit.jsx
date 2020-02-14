@@ -5,7 +5,7 @@ import classnames from 'classnames';
 import SubmitButton from '../../shared/submit-button';
 import apiFetch from '@wordpress/api-fetch';
 import { __, sprintf } from '@wordpress/i18n';
-import { isEmpty, trimEnd } from 'lodash';
+import { trimEnd, pick } from 'lodash';
 import formatCurrency, { getCurrencyDefaults } from '@automattic/format-currency';
 import { addQueryArgs, getQueryArg, isURL } from '@wordpress/url';
 import { compose } from '@wordpress/compose';
@@ -349,17 +349,6 @@ class MembershipsButtonEdit extends Component {
 		return addQueryArgs( connectURL, { state: btoa( JSON.stringify( decodedState ) ) } );
 	}
 
-	getBlockClassNames = () => {
-		const { attributes, className } = this.props;
-		const { align } = attributes;
-
-		const additionalClasses = [ 'components-button', 'is-primary', 'is-button', `align${ align }` ];
-		const buttonClasses = ! isEmpty( this.props.attributes.submitButtonClasses )
-			? this.props.attributes.submitButtonClasses.split( ' ' ).concat( additionalClasses )
-			: [ 'wp-block-button__link', ...additionalClasses ];
-		return classnames( className, buttonClasses );
-	};
-
 	render = () => {
 		const { notices } = this.props;
 		const { connected, products } = this.state;
@@ -471,7 +460,18 @@ class MembershipsButtonEdit extends Component {
 				{ ( ( ( this.hasUpgradeNudge || ! this.state.shouldUpgrade ) &&
 					connected !== API_STATE_LOADING ) ||
 					this.props.attributes.planId ) && (
-					<SubmitButton { ...this.props } className={ this.getBlockClassNames() } />
+					<SubmitButton
+						{ ...{
+							attributes: pick( this.props.attributes, [
+								'submitButtonText',
+								'backgroundButtonColor',
+								'textButtonColor',
+								'customBackgroundButtonColor',
+								'customBackgroundButtonColor',
+							] ),
+							setAttributes: this.props.setAttributes,
+						} }
+					/>
 				) }
 				{ this.hasUpgradeNudge && connected === API_STATE_NOTCONNECTED && (
 					<div className="wp-block-jetpack-recurring-payments disclaimer-only">
