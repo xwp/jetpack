@@ -178,6 +178,11 @@ class EventbriteEdit extends Component {
 
 		return (
 			<BlockStylesSelector
+				title={ _x(
+					'Embed Type',
+					'option for how the embed displays on a page, e.g. inline or as a modal',
+					'jetpack'
+				) }
 				clientId={ clientId }
 				styleOptions={ embedTypes }
 				onSelectStyle={ setAttributes }
@@ -321,6 +326,7 @@ class EventbriteEdit extends Component {
 			} else {
 				removeModalButtonStyles();
 			}
+
 			component = (
 				<>
 					{ this.renderBlockControls() }

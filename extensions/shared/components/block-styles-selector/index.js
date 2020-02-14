@@ -49,6 +49,7 @@ export default function BlockStylesSelector( {
 	onSelectStyle,
 	activeStyle,
 	viewportWidth,
+	title,
 } ) {
 	let block;
 	if ( useSelect ) {
@@ -74,7 +75,7 @@ export default function BlockStylesSelector( {
 				/>
 			</BlockControls>
 			<InspectorControls>
-				<PanelBody title={ __( 'Styles', 'jetpack' ) }>
+				<PanelBody title={ title ? title : __( 'Styles', 'jetpack' ) }>
 					<div className="block-editor-block-styles jetpack-block-styles-selector">
 						{ styleOptions.map( styleOption => {
 							const optionAttributes = {
