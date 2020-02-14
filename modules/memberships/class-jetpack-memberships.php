@@ -257,7 +257,7 @@ class Jetpack_Memberships {
 			esc_attr( $data['powered_text'] ),
 			esc_attr( $data['id'] ),
 			esc_attr( get_locale() ),
-			esc_attr( $attrs['submitButtonClasses'] ),
+			isset( $attrs['submitButtonClasses'] ) ? esc_attr( $attrs['submitButtonClasses'] ) : 'wp-block-button__link',
 			esc_attr( $button_styles ),
 			wp_kses( $data['button_label'], self::$tags_allowed_in_the_button )
 		);
