@@ -9,13 +9,11 @@ import {
 	Button,
 	IconButton,
 	Toolbar,
-	PanelBody,
 	Spinner,
 	ExternalLink,
 } from '@wordpress/components';
 import { BlockControls, BlockIcon } from '@wordpress/block-editor';
 import { withDispatch } from '@wordpress/data';
-import { InspectorControls } from '@wordpress/editor';
 import apiFetch from '@wordpress/api-fetch';
 
 /**
@@ -179,25 +177,14 @@ class EventbriteEdit extends Component {
 		];
 
 		return (
-			<InspectorControls>
-				<PanelBody
-					className="jetpack-eventbrite-block__embed-type-controls"
-					title={ _x(
-						'Embed Type',
-						'option for how the embed displays on a page, e.g. inline or as a modal',
-						'jetpack'
-					) }
-				>
-					<BlockStylesSelector
-						clientId={ clientId }
-						styleOptions={ embedTypes }
-						onSelectStyle={ setAttributes }
-						activeStyle={ style }
-						attributes={ attributes }
-						viewportWidth={ 130 }
-					/>
-				</PanelBody>
-			</InspectorControls>
+			<BlockStylesSelector
+				clientId={ clientId }
+				styleOptions={ embedTypes }
+				onSelectStyle={ setAttributes }
+				activeStyle={ style }
+				attributes={ attributes }
+				viewportWidth={ 130 }
+			/>
 		);
 	}
 

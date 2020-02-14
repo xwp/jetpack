@@ -185,18 +185,14 @@ export default function CalendlyEdit( { attributes, className, clientId, setAttr
 	const inspectorControls = (
 		<InspectorControls>
 			{ url && (
-				<>
-					<PanelBody title={ __( 'Styles', 'jetpack' ) }>
-						<BlockStylesSelector
-							clientId={ clientId }
-							styleOptions={ styleOptions }
-							onSelectStyle={ setAttributes }
-							activeStyle={ style }
-							attributes={ attributes }
-							viewportWidth={ 500 }
-						/>
-					</PanelBody>
-				</>
+				<BlockStylesSelector
+					clientId={ clientId }
+					styleOptions={ styleOptions }
+					onSelectStyle={ setAttributes }
+					activeStyle={ style }
+					attributes={ attributes }
+					viewportWidth={ 500 }
+				/>
 			) }
 			<PanelBody title={ __( 'Calendar Settings', 'jetpack' ) } initialOpen={ false }>
 				<form onSubmit={ parseEmbedCode } className={ `${ className }-embed-form-sidebar` }>

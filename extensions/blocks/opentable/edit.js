@@ -134,17 +134,15 @@ export default function OpenTableEdit( { attributes, setAttributes, className, c
 					className="is-opentable"
 				/>
 			</InspectorAdvancedControls>
+			<BlockStylesSelector
+				clientId={ clientId }
+				styleOptions={ styleOptions }
+				onSelectStyle={ updateStyle }
+				activeStyle={ style }
+				attributes={ attributes }
+				viewportWidth={ 150 }
+			/>
 			<InspectorControls>
-				<PanelBody title={ __( 'Styles', 'jetpack' ) }>
-					<BlockStylesSelector
-						clientId={ clientId }
-						styleOptions={ styleOptions }
-						onSelectStyle={ updateStyle }
-						activeStyle={ style }
-						attributes={ attributes }
-						viewportWidth={ 150 }
-					/>
-				</PanelBody>
 				<PanelBody title={ __( 'Settings', 'jetpack' ) }>
 					<RestaurantPicker rids={ rid } onChange={ onPickerSubmit } />
 					<SelectControl

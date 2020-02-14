@@ -9,8 +9,8 @@ import { isEqual } from 'lodash';
  */
 import { memo } from '@wordpress/element';
 import { getBlockType, getBlockFromExample, createBlock } from '@wordpress/blocks';
-import { BlockControls, BlockPreview } from '@wordpress/block-editor';
-import { Toolbar } from '@wordpress/components';
+import { BlockControls, BlockPreview, InspectorControls } from '@wordpress/block-editor';
+import { PanelBody, Toolbar } from '@wordpress/components';
 import { useSelect } from '@wordpress/data';
 import { ENTER, SPACE } from '@wordpress/keycodes';
 import { __ } from '@wordpress/i18n';
@@ -73,50 +73,54 @@ export default function BlockStylesSelector( {
 					popoverProps={ { className: 'jetpack-block-styles-selector-toolbar' } }
 				/>
 			</BlockControls>
-			<div className="block-editor-block-styles jetpack-block-styles-selector">
-				{ styleOptions.map( styleOption => {
-					const optionAttributes = {
-						...attributes,
-						style: styleOption.value,
-					};
+			<InspectorControls>
+				<PanelBody title={ __( 'Styles', 'jetpack' ) }>
+					<div className="block-editor-block-styles jetpack-block-styles-selector">
+						{ styleOptions.map( styleOption => {
+							const optionAttributes = {
+								...attributes,
+								style: styleOption.value,
+							};
 
-					return (
-						<div
-							key={ styleOption.value }
-							className={ classnames( 'block-editor-block-styles__item', {
-								'is-active': styleOption.value === activeStyle,
-							} ) }
-							onClick={ () => {
-								onSelectStyle( { style: styleOption.value } );
-							} }
-							onKeyDown={ event => {
-								if ( ENTER === event.keyCode || SPACE === event.keyCode ) {
-									event.preventDefault();
-									onSelectStyle( { style: styleOption.value } );
-								}
-							} }
-							role="button"
-							tabIndex="0"
-							aria-label={ styleOption.label }
-						>
-							<div className="block-editor-block-styles__item-preview">
-								{ styleOption.preview
-									? styleOption.preview
-									: useSelect &&
-									  block && (
-											<StylePreviewComponent
-												blockName={ block.name }
-												styleOption={ styleOption }
-												attributes={ optionAttributes }
-												viewportWidth={ viewportWidth }
-											/>
-									  ) }
-							</div>
-							<div className="block-editor-block-styles__item-label">{ styleOption.label }</div>
-						</div>
-					);
-				} ) }
-			</div>
+							return (
+								<div
+									key={ styleOption.value }
+									className={ classnames( 'block-editor-block-styles__item', {
+										'is-active': styleOption.value === activeStyle,
+									} ) }
+									onClick={ () => {
+										onSelectStyle( { style: styleOption.value } );
+									} }
+									onKeyDown={ event => {
+										if ( ENTER === event.keyCode || SPACE === event.keyCode ) {
+											event.preventDefault();
+											onSelectStyle( { style: styleOption.value } );
+										}
+									} }
+									role="button"
+									tabIndex="0"
+									aria-label={ styleOption.label }
+								>
+									<div className="block-editor-block-styles__item-preview">
+										{ styleOption.preview
+											? styleOption.preview
+											: useSelect &&
+											  block && (
+													<StylePreviewComponent
+														blockName={ block.name }
+														styleOption={ styleOption }
+														attributes={ optionAttributes }
+														viewportWidth={ viewportWidth }
+													/>
+											  ) }
+									</div>
+									<div className="block-editor-block-styles__item-label">{ styleOption.label }</div>
+								</div>
+							);
+						} ) }
+					</div>
+				</PanelBody>
+			</InspectorControls>
 		</>
 	);
 }
