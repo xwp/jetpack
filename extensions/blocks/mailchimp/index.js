@@ -44,7 +44,9 @@ export const settings = {
 		textButtonColor: {
 			type: 'string',
 		},
-		submitButtonClasses: { type: 'string' },
+		submitButtonClasses: {
+			type: 'string',
+		},
 		customBackgroundButtonColor: {
 			type: 'string',
 		},
