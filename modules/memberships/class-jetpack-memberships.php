@@ -251,7 +251,7 @@ class Jetpack_Memberships {
 		$button_styles = implode( ';', $button_styles );
 		add_thickbox();
 		return sprintf(
-			'<div class="wp-block-button %s"><a role="button" data-blog-id="%d" data-powered-text="%s" data-plan-id="%d" data-lang="%s" class="wp-block-button__link %s" style="%s">%s</a></div>',
+			'<div class="wp-block-button %1$s"><a role="button" data-blog-id="%2$d" data-powered-text="%3$s" data-plan-id="%4$d" data-lang="%5$s" class="%6$s" style="%7$s">%8$s</a></div>',
 			esc_attr( Jetpack_Gutenberg::block_classes( self::$button_block_name, $attrs ) ),
 			esc_attr( $data['blog_id'] ),
 			esc_attr( $data['powered_text'] ),
