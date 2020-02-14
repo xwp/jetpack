@@ -308,7 +308,7 @@ class EventbriteEdit extends Component {
 	 * @returns {object} The UI displayed when user edits this block.
 	 */
 	render() {
-		const { attributes, addModalButtonStyles, removeModalButtonStyles } = this.props;
+		const { attributes, addModalButtonStyles, removeModalButtonStyles, isSelected } = this.props;
 		const { url, style } = attributes;
 		const { editingUrl, resolvingUrl } = this.state;
 
@@ -321,10 +321,14 @@ class EventbriteEdit extends Component {
 			removeModalButtonStyles();
 			component = this.renderEditEmbed();
 		} else {
-			if ( style === 'modal' ) {
-				addModalButtonStyles();
-			} else {
-				removeModalButtonStyles();
+			// Don't add / remove button styles if blocks aren't selected
+			// For example in previews
+			if ( isSelected ) {
+				if ( style === 'modal' ) {
+					addModalButtonStyles();
+				} else {
+					removeModalButtonStyles();
+				}
 			}
 
 			component = (
