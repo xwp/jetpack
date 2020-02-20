@@ -15,7 +15,7 @@ import {
 } from './swiper-callbacks';
 
 if ( typeof window !== 'undefined' ) {
-	document.addEventListener( 'DOMContentLoaded', function() {
+	const initSlideshow = () => {
 		const slideshowBlocks = document.getElementsByClassName( 'wp-block-jetpack-slideshow' );
 		for ( const slideshowBlock of slideshowBlocks ) {
 			const { autoplay, delay, effect } = slideshowBlock.dataset;
@@ -66,5 +66,11 @@ if ( typeof window !== 'undefined' ) {
 						.classList.add( 'wp-swiper-initialized' );
 				} );
 		}
-	} );
+	};
+
+	if ( 'complete' === document.readyState || 'interactive' === document.readyState ) {
+		initSlideshow();
+	} else {
+		document.addEventListener( 'DOMContentLoaded', initSlideshow );
+	}
 }
