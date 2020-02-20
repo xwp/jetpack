@@ -1,8 +1,6 @@
 /**
  * External dependencies
  */
-import { forEach } from 'lodash';
-import domReady from '@wordpress/dom-ready';
 import ResizeObserver from 'resize-observer-polyfill';
 
 /**
@@ -17,9 +15,9 @@ import {
 } from './swiper-callbacks';
 
 if ( typeof window !== 'undefined' ) {
-	domReady( function() {
+	document.addEventListener( 'DOMContentLoaded', function() {
 		const slideshowBlocks = document.getElementsByClassName( 'wp-block-jetpack-slideshow' );
-		forEach( slideshowBlocks, slideshowBlock => {
+		for ( const slideshowBlock of slideshowBlocks ) {
 			const { autoplay, delay, effect } = slideshowBlock.dataset;
 			const prefersReducedMotion = window.matchMedia( '(prefers-reduced-motion: reduce)' ).matches;
 			const shouldAutoplay = autoplay && ! prefersReducedMotion;
@@ -67,6 +65,6 @@ if ( typeof window !== 'undefined' ) {
 						.querySelector( '.wp-block-jetpack-slideshow_container' )
 						.classList.add( 'wp-swiper-initialized' );
 				} );
-		} );
+		}
 	} );
 }
